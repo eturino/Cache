@@ -2,7 +2,7 @@
 /**
  * driver for memcached cache php extension
  */
-class EtuDev_Cache_Driver_Memcached {
+class EtuDev_Cache_Driver_Memcached implements EtuDev_Cache_Driver {
 
 	/**
 	 * @var Memcached
