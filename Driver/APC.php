@@ -3,7 +3,7 @@
 /**
  * driver for APC cache php extension
  */
-class EtuDev_Cache_Driver_APC implements EtuDev_Cache_Driver{
+class EtuDev_Cache_Driver_APC implements EtuDev_Cache_Driver {
 
 	/**
 	 * @var EtuDev_Cache_Driver_APC
