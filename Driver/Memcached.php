@@ -37,6 +37,16 @@ class EtuDev_Cache_Driver_Memcached implements EtuDev_Cache_Driver {
 		}
 	}
 
+	static protected $keyprefix;
+
+	static protected function completeKey($key) {
+		if (!static::$keyprefix) {
+			static::$keyprefix = substr(md5(__FILE__), 3);
+		}
+
+		return static::$keyprefix . $key;
+	}
+
 	protected function parseAndPrepareServers($serverString) {
 		$parsed = $this->parseServers($serverString);
 		if ($parsed) {
@@ -62,6 +72,7 @@ class EtuDev_Cache_Driver_Memcached implements EtuDev_Cache_Driver {
 				}
 			}
 		}
+
 		return $a;
 	}
 
@@ -103,6 +114,7 @@ class EtuDev_Cache_Driver_Memcached implements EtuDev_Cache_Driver {
 		if (!static::$instance) {
 			static::$instance = new static();
 		}
+
 		return static::$instance;
 	}
 
@@ -118,6 +130,7 @@ class EtuDev_Cache_Driver_Memcached implements EtuDev_Cache_Driver {
 		if (is_null($this->enabled)) {
 			$this->enabled = (bool) extension_loaded('memcached');
 		}
+
 		return $this->enabled;
 	}
 
@@ -144,9 +157,9 @@ class EtuDev_Cache_Driver_Memcached implements EtuDev_Cache_Driver {
 		}
 
 		if ($specific_server_key) {
-			$ret = $l->setByKey($specific_server_key, $key, $value, $ttl);
+			$ret = $l->setByKey($specific_server_key, static::completeKey($key), $value, $ttl);
 		} else {
-			$ret = $l->set($key, $value, $ttl);
+			$ret = $l->set(static::completeKey($key), $value, $ttl);
 		}
 
 		if ($isPreparedForCache) {
@@ -171,9 +184,9 @@ class EtuDev_Cache_Driver_Memcached implements EtuDev_Cache_Driver {
 		$l = $this->getLib();
 		$this->checkServers();
 		if ($specific_server_key) {
-			$ret = $l->getByKey($specific_server_key, $key);
+			$ret = $l->getByKey($specific_server_key, static::completeKey($key));
 		} else {
-			$ret = $l->get($key);
+			$ret = $l->get(static::completeKey($key));
 		}
 
 		if (!$ret && $l->getResultCode() == Memcached::RES_NOTFOUND) {
@@ -201,6 +214,7 @@ class EtuDev_Cache_Driver_Memcached implements EtuDev_Cache_Driver {
 		if (!$this->isEnabled()) {
 			return false;
 		}
+
 		return $this->getLib()->flush();
 	}
 
@@ -208,13 +222,15 @@ class EtuDev_Cache_Driver_Memcached implements EtuDev_Cache_Driver {
 		if (!$this->isEnabled()) {
 			return false;
 		}
-		return $this->getLib()->delete($k);
+
+		return $this->getLib()->delete(static::completeKey($k));
 	}
 
 	public function getServerStatus() {
 		if (!$this->isEnabled()) {
 			return false;
 		}
+
 		return $this->getLib()->getStats();
 	}
 
