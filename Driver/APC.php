@@ -27,7 +27,7 @@ class EtuDev_Cache_Driver_APC implements EtuDev_Cache_Driver {
 
 	static protected function completeKey($key) {
 		if (!static::$keyprefix) {
-			static::$keyprefix = substr(md5(__FILE__), 3);
+			static::$keyprefix = substr(md5(__FILE__), 0, 3) . '_';
 		}
 
 		return static::$keyprefix . $key;
