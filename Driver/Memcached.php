@@ -99,6 +99,11 @@ class EtuDev_Cache_Driver_Memcached implements EtuDev_Cache_Driver {
 		foreach ($this->servers as $s) {
 			$l->addServer($s[self::SERVCONF_HOST], $s[self::SERVCONF_PORT]);
 		}
+
+		//fallback if there are no servers (assume localhost standard)
+		if (!$this->servers) {
+			$this->addServers();
+		}
 	}
 
 	/**
