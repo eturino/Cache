@@ -3,7 +3,7 @@
 /**
  * driver for APC cache php extension
  */
-class EtuDev_Cache_Driver_APC implements EtuDev_Cache_Driver {
+class EtuDev_Cache_Driver_APC implements EtuDev_Cache_Driver, EtuDev_Cache_DriverWithPrefix {
 
 	/**
 	 * @var EtuDev_Cache_Driver_APC
@@ -125,10 +125,17 @@ class EtuDev_Cache_Driver_APC implements EtuDev_Cache_Driver {
 		return array('sma' => apc_sma_info(), 'cache_info' => apc_cache_info('user'));
 	}
 
-	static public function deletePrefix($prefix) {
+	public function deleteAllPrefix($prefix) {
+		if (!$this->isEnabled()) {
+			return false;
+		}
 		$toDelete = static::getAllKeysPrefix($prefix);
 
 		return apc_delete($toDelete);
+	}
+
+	static public function deletePrefix($prefix) {
+		return static::getInstance()->deleteAllPrefix($prefix);
 	}
 
 	/**
@@ -138,7 +145,7 @@ class EtuDev_Cache_Driver_APC implements EtuDev_Cache_Driver {
 	 *
 	 * @return APCIterator
 	 */
-	static public function getAllKeysPrefix($prefix) {
+	static protected function getAllKeysPrefix($prefix) {
 		$p = static::completeKey($prefix);
 
 		return new APCIterator('user', "/^$p/", APC_ITER_VALUE);

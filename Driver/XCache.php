@@ -3,7 +3,7 @@
 /**
  * driver for XCache cache php extension
  */
-class EtuDev_Cache_Driver_XCache implements EtuDev_Cache_Driver {
+class EtuDev_Cache_Driver_XCache implements EtuDev_Cache_Driver, EtuDev_Cache_DriverWithPrefix {
 
 	/**
 	 * @var EtuDev_Cache_Driver_XCache
@@ -248,6 +248,13 @@ class EtuDev_Cache_Driver_XCache implements EtuDev_Cache_Driver {
 
 
 		return $res;
+	}
+
+	public function deleteAllPrefix($prefix) {
+		if (!$this->isEnabled()) {
+			return false;
+		}
+		return xcache_unset_by_prefix(static::completeKey($prefix));
 	}
 
 	static public function deletePrefix($prefix) {
