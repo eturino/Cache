@@ -116,7 +116,7 @@ class EtuDev_Cache_Driver_XCache implements EtuDev_Cache_Driver, EtuDev_Cache_Dr
 	}
 
 	public function exists($key) {
-		return xcache_isset(static::completeKey($key));
+		return @xcache_isset(static::completeKey($key));
 	}
 
 	/**
@@ -140,7 +140,7 @@ class EtuDev_Cache_Driver_XCache implements EtuDev_Cache_Driver, EtuDev_Cache_Dr
 		//serialize because you cannot store objects into xcache
 		$v = serialize($value);
 
-		$ret = xcache_set(static::completeKey($key), $v, $ttl);
+		$ret = @xcache_set(static::completeKey($key), $v, $ttl);
 
 		if ($isPreparedForCache) {
 			/** @var $value EtuDev_Interfaces_PreparedForCache */
@@ -161,8 +161,8 @@ class EtuDev_Cache_Driver_XCache implements EtuDev_Cache_Driver, EtuDev_Cache_Dr
 			return null;
 		}
 		$k = static::completeKey($key);
-		if (xcache_isset($k)) {
-			$x = xcache_get($k);
+		if (@xcache_isset($k)) {
+			$x = @xcache_get($k);
 			//serialize because you cannot store objects into xcache
 			return unserialize($x);
 		}
@@ -191,9 +191,9 @@ class EtuDev_Cache_Driver_XCache implements EtuDev_Cache_Driver, EtuDev_Cache_Dr
 			}
 		}
 
-		$cnt = xcache_count(XC_TYPE_VAR);
+		$cnt = @xcache_count(XC_TYPE_VAR);
 		for ($i = 0; $i < $cnt; $i++) {
-			xcache_clear_cache(XC_TYPE_VAR, $i);
+			@xcache_clear_cache(XC_TYPE_VAR, $i);
 		}
 
 		if (ini_get('xcache.admin.enable_auth')) {
@@ -211,7 +211,7 @@ class EtuDev_Cache_Driver_XCache implements EtuDev_Cache_Driver, EtuDev_Cache_Dr
 			return false;
 		}
 
-		return xcache_unset(static::completeKey($k));
+		return @xcache_unset(static::completeKey($k));
 	}
 
 	public function getServerStatus() {
@@ -237,7 +237,7 @@ class EtuDev_Cache_Driver_XCache implements EtuDev_Cache_Driver, EtuDev_Cache_Dr
 			}
 		}
 
-		$res = array(XC_TYPE_VAR => xcache_info(XC_TYPE_VAR, -1), XC_TYPE_PHP => xcache_info(XC_TYPE_PHP, -1));
+		$res = array(XC_TYPE_VAR => @xcache_info(XC_TYPE_VAR, -1), XC_TYPE_PHP => @xcache_info(XC_TYPE_PHP, -1));
 
 		if (ini_get('xcache.admin.enable_auth')) {
 			if (isset($backup['PHP_AUTH_USER'])) {
@@ -254,11 +254,11 @@ class EtuDev_Cache_Driver_XCache implements EtuDev_Cache_Driver, EtuDev_Cache_Dr
 		if (!$this->isEnabled()) {
 			return false;
 		}
-		return xcache_unset_by_prefix(static::completeKey($prefix));
+		return @xcache_unset_by_prefix(static::completeKey($prefix));
 	}
 
 	static public function deletePrefix($prefix) {
-		return xcache_unset_by_prefix(static::completeKey($prefix));
+		return @xcache_unset_by_prefix(static::completeKey($prefix));
 	}
 
 }
