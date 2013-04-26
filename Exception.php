@@ -1,5 +1,6 @@
 <?php
 
-class EtuDev_Cache_Exception extends Exception {
+class EtuDev_Cache_Exception extends Exception
+{
 
 }

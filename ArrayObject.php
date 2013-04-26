@@ -1,5 +1,6 @@
 <?php
 
-class EtuDev_Cache_ArrayObject extends ArrayObject {
+class EtuDev_Cache_ArrayObject extends ArrayObject
+{
 
 }

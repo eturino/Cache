@@ -1,7 +1,8 @@
 <?php
 
-interface EtuDev_Cache_DriverWithPrefix {
+interface EtuDev_Cache_DriverWithPrefix
+{
 
-	function deleteAllPrefix($prefix);
+    function deleteAllPrefix($prefix);
 
 }

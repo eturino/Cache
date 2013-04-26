@@ -11,37 +11,40 @@
  *
  *
  */
-class EtuDev_Cache_Engine_Long extends EtuDev_Cache_Engine {
+class EtuDev_Cache_Engine_Long extends EtuDev_Cache_Engine
+{
 
 
-	/**
-	 * @var EtuDev_Cache_Engine_Long
-	 */
-	static protected $instance;
+    /**
+     * @var EtuDev_Cache_Engine_Long
+     */
+    static protected $instance;
 
-	/**
-	 * @static
-	 * @return EtuDev_Cache_Engine_Long
-	 */
-	static public function getInstance() {
-		if (!static::$instance) {
-			static::$instance = new static();
-		}
+    /**
+     * @static
+     * @return EtuDev_Cache_Engine_Long
+     */
+    static public function getInstance()
+    {
+        if (!static::$instance) {
+            static::$instance = new static();
+        }
 
-		return static::$instance;
-	}
+        return static::$instance;
+    }
 
-	protected function loadDriver() {
+    protected function loadDriver()
+    {
 
-		if (extension_loaded('memcached')) {
-			$this->driver = EtuDev_Cache_Driver_Memcached::getInstance();
-		} elseif (extension_loaded('xcache')) {
-			$this->driver = EtuDev_Cache_Driver_XCache::getInstance();
-		} elseif (extension_loaded('apc')) {
-			$this->driver = EtuDev_Cache_Driver_APC::getInstance();
-		}
+        if (extension_loaded('memcached')) {
+            $this->driver = EtuDev_Cache_Driver_Memcached::getInstance();
+        } elseif (extension_loaded('xcache')) {
+            $this->driver = EtuDev_Cache_Driver_XCache::getInstance();
+        } elseif (extension_loaded('apc')) {
+            $this->driver = EtuDev_Cache_Driver_APC::getInstance();
+        }
 
-	}
+    }
 
 
 }
